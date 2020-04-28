@@ -1,0 +1,72 @@
+rpm -q docker-ce
+systemctl enable docker --> Runs after every boot
+docker info
+
+provisioning --> installing and booting
+4 methods
+1)bare metal
+2)Cloud Instance
+3)Virtualization
+4)Docker
+
+docker images --> images downloaded in system
+every docker image has unique id
+
+Docker images can launch with 10-20 mb ram
+
+When u launch os in docker, docker commands wont work in that os beacusse u havent installed in it
+
+Docker host == redhat8(In our case)
+
+exit --> to shutdown the os(Not terminate)
+docker ps -a --> Info about start and stop of os
+To start os again, docker start id(or  name)
+After starting, u have to attach to use it
+docker attach id(name)
+
+To stop os:
+  If u are inside od --> exit
+  If u are outside[in new terminal] --> docker stop (name or id)
+
+docker run -it --name vishnuos centos:7  --> Giving instance custom name
+If u want to configre server for web or hadoop, gives names according to it. It makes to easy to identify[name should be unique]
+
+redhat and centos are same.[centos is downstream project of redhat],[centos is free,publicly available]
+
+In linux, every command is a file. So if any command doesnt work in docker image,the software isnt installed
+
+Data in docker is temporary.If u save file in one dockerid, it is available there only
+If u run --> docker run -it centos:7, it launches docker container with another id.But if u start the previous docker, the data is present
+
+To terminate docker container, use : docker rm (id)
+
+yum install firefox
+yum remove firefox
+
+Myth: Cant launch GUI program in docker
+
+docker rmi centos:latest -f
+
+Management commands:
+If u are doing anything with containers,add container in command.
+docker container run -it centos:7
+docker container stop (id)
+docker container ps (or) docker container ls
+docker images --> docker image ls
+docker image rmi ubuntu:14.04
+
+docker image --help  --> for more info
+
+docker container ls -a -q --> gives all ids of containers
+docker container rm -f $(docker container ls -a -q) --> removes all containers
+
+ctrl+p+q  -->detach from container[comeout of container to main os, but container is still running]
+
+docker run -it centos:7 date  --> after booting,runs date command and then stops
+In above command, we can specify a particular program at end.After completing the program,it stops.
+The progeam can be ml model,hadoop etc
+
+docker run -it --name os1 --rm centos:7 date  --> Launches,runs program,terminates.
+
+Creating own image:- 1)Commit 2)Dockerfile
+docker commit containerid  mycustomimage:v1 --> cloning process

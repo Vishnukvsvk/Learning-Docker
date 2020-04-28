@@ -1,0 +1,67 @@
+CONFIGURING APACHE WEBSERVER IN DOCKER CONTAINER
+
+Error response from aemon,permission denied --> stop SELinux
+​docker run -it --net=host centos:7  --> for internet connectivity
+
+docker container inspect (container-name or id) --> to get info about docker container
+Memory = 0 --> Means docker uses all ram available for base system
+
+free -m --> gives ram info
+lscpu --> gives all cpu info
+
+docker container inspect --format "{{ .NetworkSettings.IPAddress }}" webserver -->Gives its value
+docker container inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" webserver
+---> "{{}}" = variable in docker commands
+
+By default, systemctl command is not permitted in docker.
+which systemctl --> /usr/sbin/httpd  __. alternate command
+/usr/bin/http --> If we run, port 80 is enabled
+To stop httpd, killall httpd[if using above command instead of systemctl]
+
+softwares stored in storage
+serices stored in ram. So when we exit os, services are stopped
+
+systemctl start httpd:
+1) run /usr/sbin/httpd
+2) creayes httpd.pid file
+
+systemctl stop httpd:
+1)killall httpd
+2)remove httpd.pid file
+
+Our goal --: Start httpd as docker container starts
+Approach:
+1)rm -rf /var/run/httpd/*  --> Mainly removing httpd.pid file
+2)vi /root/.bashrc --> add /usr/sbin/httpd
+
+Main reason we use docker,virtualization concepts is for shipping software
+We can share our vm's by exporting them.(Go to file-->export.)
+It creates a file. U can share it.
+But exporting vm's is heavy. It is gb's in size.
+Containers are better option than virtualization.
+
+docker save webserver:v1 web.tar  --> exporting image
+Now u can transfer tar file using mail,scp,ftp etc;
+scp web.tar root@(receiver-ip):/root
+After receiving, docker load -i web.tar --> u get image in your system
+
+Above method is not mostly preferred.Preffered method is putting image in registry.
+Other guys can pull image from registry
+
+To upload image:-
+docker login
+docker push webserver:v1  --> doesnt accept, u have to change name
+docker tag webserver:v1 vishnukvs/webserver:v1
+docker push vishnukvs/webserver:v1
+
+Three types of registry
+--> local
+--> public
+--> private
+
+docker network ls
+-->bridge
+-->host 
+-->none
+
+docker run -it --network bridge centos:7

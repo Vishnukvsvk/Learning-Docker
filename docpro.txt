@@ -1,0 +1,17 @@
+docker run -it -e myname=vish centos:7
+echo $myname --> Output is vish, creating variable outside docker
+
+Run mysql image 
+docker run -it -e MYSQL_ROOT_PASSWORD=redhat mysql:5.7 (-e = entrpoint = input)
+U will run the server,check ip
+
+In roothost,download mysql command.Using this command, u can connect to mysql server
+mysql -h 172.17.0.2 -u root -predhat  (-p=password , No space , user =root)
+User=root is not good practice, u shoul create user while launching mysql server.
+
+Best way to create mysql server
+docker volume create mysql_storage
+
+
+
+ 

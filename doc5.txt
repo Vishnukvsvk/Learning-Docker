@@ -1,0 +1,55 @@
+Vitualization
+-->In this concept, the os shares ram,storage of the main hardware.
+-->It thinks it as a whole computer
+-->Lot of wastage of resources in thi concept
+-->Too heavy
+
+Docker
+-->It is a container
+-->It shares both hardware and kernel of base OS.
+Kernel is a software which is a bridge between hardware and applications in os.It is huge.
+For booting os, kernel is necessary.It scans the devices and locates all the necessary drivers and starts it.
+
+When u r inside container,
+rpm -q kernel --> u get kernel is not intsalled
+uname -r --> gives the kernel using.
+In container,without installing kernel, we can use it by sharing kernel of base OS.
+Also container uses RAM exactly the RAM of base OS.
+
+The main reason docker is fast is there is no booting.Every resource is shared.
+
+In any linux os, first process they start is systemd --> before versions,it was init
+pstree --> commnad shows the linkage of all process
+systemd starts  other proces and those start other process.
+systemctl is inside systemd process
+
+In container,there is no systemd process
+
+
+Ip address --> Private and Public
+Private address range: // Free of cost
+
+24-bit block ---> 10.0.0.0 to 10.255.255.255  --> used in cloud computing
+20-bit block ---> 172.16.0.0 to 172.31.255.255 --> Used by docker
+16-bit block ---> 192.168.0.0 to 192.168.255.255
+
+ISP Rule
+Private ip can ping Private ip only
+Public ip can ping Public ip only
+
+Router has two Nic with two ips
+One end is private ip in LAN range, Other end is public ip
+When we send packect,It contains source & destination ip.
+Router receives and changes source ip to its public ip so that ISP cant block
+This is called SNAT --> Source Network Address Translation
+
+SNAT --> Private to Public
+DNAT --> Public to Private  , D = Destination
+
+By default,Router disables DNAT, u can enable it.
+
+Rhel in VMBox can ping to windows as it thinks windows ip as public
+But windows cant ping to rhel as it thinks it as private network
+
+If u launch container in host network, network card of host is shared to container.
+If u launch container in bridge network,a new network card is created in container.

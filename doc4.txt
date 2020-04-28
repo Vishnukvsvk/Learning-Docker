@@ -1,0 +1,62 @@
+docker logs (container-name=CN)--> Gives all the things u have done in that container.(All history)
+docker logs -f (container-name) --> Gives output at realtime,that is prints continuosly
+
+Devops tool -- Ansible -- Used for automation -- Industry standard
+
+Automation wont work if human intervention takes place in our script
+
+docker exec (CN) date
+Only works if container is running in background
+goes inside container,runs command and prints output on host
+
+While attching container, if we exit, the container stops
+docker exec -it (CN) bash
+Using above command we can go into containeer and if we exit,container doesnt stop
+
+docker container -it -d centos:7 --> [-d = detach] --> launch os and runs in background
+
+DHCP --> Allocates dynamic ip to systems
+Router connects LAN to internet
+
+docker network inspect bridge
+-->Driver = bridge -->Router + Switch
+
+When u launch a container, it launches in bridge network
+
+U can create your owm network.
+If u use bridge in your network,DHCP is already configured
+docker network create --help
+
+docker network create --driver bridge net1
+docker run -dit --name os1 --network net1 centos:7
+
+In your own network, u can ping between two containers using therir name.
+Always connect servers using name and not ip address because ip may change when we restart 
+Linking of containers is only possible in our network,not in default bridge network
+
+null deiver doesnt have network card, so no net connectivity
+So if u launch container in none(null driver), its isolated i.e., no net connection
+This container is used for testing purpose
+
+docker network disconnect net1 c1 --> diconnecting from network (or) remove NIC
+docker network connect net2 c1
+
+Lad Balancing: Many algorithms
+1)Round Robin --> 1st request to 1st server,2nd to 2nd, 3rd to 1st,4th to 2nd ... like that
+
+
+To enable httpd,
+vi /root/.bashrc
+rm -rf /var/run/httpd/*
+/usr/sbin/httpd
+
+There are many hardware/softwares for load balancing
+DNS also does load balancing
+
+Crete two servers using our image in our network.
+Now create client and ping to its dns name
+U will see load-balancing effect
+** Client should be in same network.[Try creating client in our network and in default network]
+docker container run -it --name web1 --network-alias sitename --network mynet webphp:v1
+
+yum whatprovides nslookup

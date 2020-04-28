@@ -1,0 +1,10 @@
+# Masquerading allows for docker ingress and egress (this is the juicy bit)
+firewall-cmd --zone=public --add-masquerade --permanent
+
+# Specifically allow incoming traffic on port 80/443 (nothing new here)
+firewall-cmd --zone=public --add-port=80/tcp
+firewall-cmd --zone=public --add-port=443/tcp
+
+# Reload firewall to apply permanent rules
+firewall-cmd --reload
+Reboot or restart dockerd, and both ingress and egress should work.

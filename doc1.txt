@@ -1,0 +1,13 @@
+docker ps --> shows how many os are running in your system
+
+To install docker, configure yum by creating repo and add below base url.
+https://download.docker.com/linux/centos/7/x86_64/stable/
+yum install docker-ce --nobest  -->(nobest == nearly best version for our os)
+
+systemctl start docker  --> to start docker service
+
+
+docker pull ubuntu --> pulls latest version.
+docker run -t -i ubuntu:14.04  --> install ubuntu with 14.04 version and open terminal of it(-t) & start interacting(-i)  --> It pulls image if not present and starts running
+
+

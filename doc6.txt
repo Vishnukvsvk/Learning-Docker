@@ -1,0 +1,68 @@
+Docker networking
+
+rhel has a network card --> enp0s3
+docker network card --> docker0
+
+if u enable NAT in networking setting of rhel8 vm, u can ping to cmd from rhel, but u cant ping to rhel8 from cmd
+
+if u enable bridge in networking setting of rhel8 vm, both cmd and rhel are pinggable from both sides.
+
+docker0 is network card of docker.It has bridge driver.Docker container can ping to rhel8 terminal and also rhel8 can ping to docker container.But docker container cant ping to cmd.
+
+route -n --> gives route table i.e., gateway info
+
+sysctl -a | grep ip_forward
+if ip_forward = 1 , u are connectied to outside world
+
+To connect outside world to docker container, u have to give port while launching docker container
+docker run -it -p 1234:80 web_server:1
+docker ps -a
+We get 0.0.0.0:1234 -> 80, that means 192.168.43.54:1234 , so outside world can access container.
+That means , if we can connect to 192.168.43.54(enp0s3), we can connect to container using 1234
+192.168.43.54:1234 -> (containerid):80
+The above concept is called PAT[PAT is inside of NAT]
+This is done by iptables, conecpt is called forwarding
+By default,iptables forwarding policy is DROP
+iptables -P FORWARD ACCEPT  --> Changing the policy
+
+Go to chrome and type 192.168.43.54:1234, u will get coonected[u can see site]
+
+---> Docker is a brick and Kubernetes in building
+
+Storage:-
+1)ephemeral -- temporary --> C-Drive, if windows stuck and we boot it again,C -drive info is gone,but not D-rive or E-Drive info.
+Ephemeral disks are virtual disks that are created for the sole purpose of booting a virtual machine and should be thought of as temporary.
+2)Persistent -- permanent
+
+Docker uses ephemeral storage
+
+aias --> temporary command storage --> Type it to see all ali as commands
+alias ddel='docker rm -f $(docker ps -a -q)'
+If we type ddel in bash, it executes above command. It works until terminal is closed
+To make it permanent, copy that to /root/.bashrc
+
+docker volume create myst1 --> Creates a storage like pendrive
+docker run -it --name os1 -v myst1:/var/www/html web_server:1   ===> mounting storage to folder.
+--> -v = volume
+
+Volume is just like pendrive. U can store files in one container,terminate the container,and attach the same volume to another container,U can see files of previous container here.Just like pendrive
+
+U can mount the volume to two or more containers
+
+**Volumes should be used in Load Balancing concept.If we update a webserver in its storage,the other server wont get updated.For updating both,we need to attach volumes.
+This is called persistent storages.
+
+docker volume inspect mystl --> Gives where is storage taken from in os.
+
+U can even mount baseOS folders to containers
+docker run -it -v /run/media/root/RHEL-8-0-0-BaseOS-x86_64:/dvd centos:latest
+The above command links all softwares in baseOS to /dvd in container.
+In centos container,yum is already configured which has internet url
+rm -f *.repo --> To remove all repos in /etc/yum.repos.d folder of container
+Create repo which has url of /dvd folder.
+By this,it installs from software present in /dvd.
+
+**While mounting software folder of baseos to container, make sure container image version is same of that base OS version
+
+In real world, we give storages like s3,clusters etc
+
